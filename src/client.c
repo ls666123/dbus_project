@@ -67,11 +67,17 @@ int main(int argc, char *argv[]) {
         }
         
         // 发送数据
-        send(sock, buffer, strlen(buffer), 0);
+        //send(sock, buffer, strlen(buffer), 0);
+        ssize_t sent = send(sock, buffer, strlen(buffer), 0);
+        if (sent < 0) {
+            perror("[Client] send error");
+            break;
+        }
         
         // 接收响应
-        memset(buffer, 0, BUF_SIZE);
-        int n = recv(sock, buffer, BUF_SIZE - 1, 0);
+        //memset(buffer, 0, BUF_SIZE);
+        //int n = recv(sock, buffer, BUF_SIZE - 1, 0);
+        ssize_t n = recv(sock, buffer, BUF_SIZE - 1, 0);
         if (n <= 0) {
             printf("[Client] Server disconnected\n");
             break;
