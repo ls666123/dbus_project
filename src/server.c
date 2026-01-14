@@ -19,21 +19,27 @@ void *handle_client(void *arg) {
     printf("[Server] New client thread started, fd=%d\n", client_fd);
     
     while (1) {
-        memset(buffer, 0, BUF_SIZE);
-        int n = recv(client_fd, buffer, BUF_SIZE - 1, 0);
+        //memset(buffer, 0, BUF_SIZE);
+        //int n = recv(client_fd, buffer, BUF_SIZE - 1, 0);
+        ssize_t n = recv(client_fd, buffer, BUF_SIZE - 1, 0);
         
-        if (n <= 0) {
-            printf("[Server] Client disconnected, fd=%d\n", client_fd);
+        if (n < 0) {
+            perror("[Server] recv error");
+            break;
+        }
+        
+        if (n == 0) {
+            printf("[Server] Client disconnected (graceful), fd=%d\n", client_fd);
             break;
         }
         
         // 打印收到的数据
-        printf("[Server] Received from client: %s\n", buffer);
+        printf("[Server] Received %zd bytes from client: %s\n", n, buffer);
         
         // 返回响应
         char response[BUF_SIZE];
-        snprintf(response, sizeof(response), "Server received: %.900s", buffer);
-        send(client_fd, response, strlen(response), 0);
+        int resp_len = snprintf(response, sizeof(response), "Server received: %s", buffer);
+        send(client_fd, response, resp_len, 0);
     }
     
     close(client_fd);
@@ -78,6 +84,10 @@ int main() {
     // 接受客户端连接
     while (1) {
         int *client_fd = malloc(sizeof(int));
+        if (client_fd == NULL) {
+            perror("malloc failed");
+            continue;
+        }
         *client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_len);
         
         if (*client_fd < 0) {
@@ -91,7 +101,12 @@ int main() {
         
         // 创建线程处理客户端
         pthread_t tid;
-        pthread_create(&tid, NULL, handle_client, client_fd);
+        if (pthread_create(&tid, NULL, handle_client, client_fd) != 0) {
+            perror("pthread_create failed");
+            close(*client_fd);
+            free(client_fd);
+            continue;
+        }
         pthread_detach(tid);
     }
     
