@@ -76,10 +76,10 @@ int main(int argc, char *argv[]) {
             printf("[Client] Server disconnected\n");
             break;
         }
-        
-        printf("[Client] %s\n", buffer);
+        buffer[n] = '\0';
+        printf("[Client] Response (%zd bytes): %s\n", n, buffer);
+        //printf("[Client] %s\n", buffer);
     }
-    
     close(sock);
     return 0;
 }
