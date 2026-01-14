@@ -1,4 +1,5 @@
 server
 client
+test_database
 *.o
 *.db
