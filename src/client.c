@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
             break;
         }
 
-        /* 关键：手动补 \0 */
+        /*  \0 */
         buffer[n] = '\0';
 
         printf("[Server] %s\n", buffer);
