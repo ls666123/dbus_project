@@ -11,13 +11,7 @@
 - 实现 `database_insert()` - 插入数据
 - 实现 `database_select()` - 查询数据
 
-### 数据库表结构
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| id | INTEGER | 主键自增 |
-| type | TEXT | 消息类型 (Receive/Return) |
-| data | TEXT | 消息内容 |
-| timestamp | TEXT | 时间戳 |
+
 
 ## 编译
 ```bash
