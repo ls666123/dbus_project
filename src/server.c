@@ -47,7 +47,7 @@ void *handle_client(void *arg) {
             break;
         }
 
-        /* 关键：手动补 \0，将字节流转为字符串 */
+        /*  \0，将字节流转为字符串 */
         buffer[n] = '\0';
 
         printf("[Server] Received (%zd bytes): %s\n", n, buffer);
