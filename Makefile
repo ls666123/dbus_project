@@ -1,19 +1,27 @@
 CC = gcc
-CFLAGS = -Wall -pthread -I./src
-LDFLAGS = -lpthread -lsqlite3
+CFLAGS = -Wall -Wextra -g -pthread -I./src
+LDFLAGS_SERVER = -lpthread -lsqlite3
+LDFLAGS_DB = -lsqlite3
 
-all: server client test_database
+all: server client database
+	@echo "Build complete!"
 
-server: src/server.c
-	$(CC) $(CFLAGS) -o server src/server.c $(LDFLAGS)
+server: src/server.c src/database.c src/database.h
+	$(CC) $(CFLAGS) -o $@ src/server.c src/database.c $(LDFLAGS_SERVER)
+	@echo "[OK] Server"
 
 client: src/client.c
-	$(CC) $(CFLAGS) -o client src/client.c
+	$(CC) $(CFLAGS) -o $@ src/client.c
+	@echo "[OK] Client"
 
-test_database: src/test_database.c src/database.c
-	$(CC) $(CFLAGS) -o test_database src/test_database.c src/database.c $(LDFLAGS)
+database: src/database.c src/database.h
+	$(CC) $(CFLAGS) -DTEST_MODE -o $@ src/database.c $(LDFLAGS_DB)
+	@echo "[OK] Database"
+
+test: database
+	./database test
 
 clean:
-	rm -f server client test_database *.db
+	rm -f server client database *.db
 
-.PHONY: all clean
+.PHONY: all test clean
