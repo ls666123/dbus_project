@@ -30,4 +30,5 @@
 - 从 UI 输入数据给 Socket 客户端
 - 查询 database 数据
 
-## 加分项：DBus IPC（待完成）
+## 加分项：DBus IPC
+使用 systemd 的 sd-bus API 实现进程间通信，将数据库操作从 Socket 服务器分离到独立的 DBus 服务进程中。
