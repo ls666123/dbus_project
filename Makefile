@@ -1,4 +1,4 @@
-CC = gcc
+nano README.md             # 删掉旧内容，粘贴新的 README.mdCC = gcc
 CFLAGS = -Wall -Wextra -g -pthread -I./src
 LDFLAGS_SERVER = -lpthread -lsqlite3
 LDFLAGS_DB = -lsqlite3
